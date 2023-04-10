@@ -1,0 +1,208 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Simple Bank API",
+    "description": "A Simple Bank application API.",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "tags": [
+  ],
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "description": "Logging as a user in the system.",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to login.",
+            "schema": {
+              "$ref": "#/definitions/LoggingUser"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User is Logged In.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "404": {
+            "description": "User not found."
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "description": "Creating a user in the system.",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to create.",
+            "schema": {
+              "$ref": "#/definitions/CreatingUser"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User is created."
+          },
+          "404": {
+            "description": "User not found."
+          }
+        }
+      }
+    },
+    "/transferToAccount": {
+      "post": {
+        "tags": ["Transactions"],
+        "description": "Transferring funds to another account internally.",
+        "parameters": [
+          {
+            "name": "transactionInfo",
+            "in": "body",
+            "description": "Transaction Information such including amount, source_account_number and destination_account_number",
+            "schema": {
+              "$ref": "#/definitions/sendAmountToAnotherUserInternally"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Transaction Done."
+          },
+          "404": {
+            "description": "Transaction couldn't be completed due to internal reasons."
+          }
+        }
+      }
+    },
+    "/depositToAccount": {
+      "post": {
+        "tags": ["Transactions"],
+        "description": "Depositing funds to account.",
+        "parameters": [
+          {
+            "name": "depositInfo",
+            "in": "body",
+            "description": "Depositing Information such including amount and account_number.",
+            "schema": {
+              "$ref": "#/definitions/depositToAccount"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Deposit Done."
+          },
+          "404": {
+            "description": "Deposit couldn't be completed due to internal reasons."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "LoggingUser": {
+      "required": ["email", "password"],
+      "properties": {
+        "email": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "CreatingUser": {
+      "required": ["first_name", "last_name", "email", "password", "account_type"],
+      "properties": {
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "account_type": {
+          "type": "string"
+        }
+      }
+    },
+    "User": {
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "account_number": {
+          "type": "string"
+        }
+      }
+    },
+    "sendAmountToAnotherUserInternally": {
+      "properties": {
+        "amount": {
+          "type": "number"
+        },
+        "source_account_number": {
+          "type": "string"
+        },
+        "destination_account_number": {
+          "type": "string"
+        }
+      }
+
+    },
+    "depositToAccount": {
+      "properties": {
+        "amount": {
+          "type": "number"
+        },
+        "account_number": {
+          "type": "string"
+        }
+      }
+    }
+
+  }
+}
