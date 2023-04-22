@@ -107,6 +107,7 @@ const registerUser = async (req, res) => {
         }
 
 
+        let userExists = false;
         // checking if this user already exists
         const userCheckingPromise = new Promise((resolve, reject) => {
             pool.query('Select * from users where email = $1', [email], (error, results) => {
@@ -119,6 +120,7 @@ const registerUser = async (req, res) => {
                     console.log("user already exists, please login");
                     res.status(409).send("user already exists, please login");
                     resolve("user already exists");
+                    userExists = true;
                 }
                 else {
                     resolve("user doesn't exist in the table, it can be created");
@@ -126,6 +128,10 @@ const registerUser = async (req, res) => {
             });
         });
         await userCheckingPromise;
+
+        if(userExists) {
+          return;
+        }
 
 
         // user doesn't exist
