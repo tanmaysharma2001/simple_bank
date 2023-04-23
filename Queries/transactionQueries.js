@@ -12,6 +12,7 @@ const pool = new Pool({
 
 
 const sendAmountToAnotherUserInternally = async (req, res) => {
+
     const body = req.body;
 
     const {
@@ -22,6 +23,7 @@ const sendAmountToAnotherUserInternally = async (req, res) => {
 
     if (!(amount && source_account_number && destination_account_number)) {
         res.status(400).send("All input is required.");
+        return;
     }
 
     let result;
@@ -29,22 +31,36 @@ const sendAmountToAnotherUserInternally = async (req, res) => {
     // currently we have the same currency
     // everything including transactions
     const transactionPromise = new Promise(async (resolve, reject) => {
-        // deducting that amount from source account
-        pool.query('Update accounts set balance=(balance-$1) where account_number=$2;', [amount, source_account_number], (error, results) => {
-            if (error) {
-                reject(error);
-                throw error;
-            }
-        });
 
-
-        // adding that amount to destination account
-        pool.query('Update accounts set balance=(balance+$1) where account_number=$2;', [amount, destination_account_number], (error, results) => {
-            if (error) {
-                reject(error);
-                throw error;
-            }
-        });
+        // we use the basic concept of transactions
+        // we need begin and rollback as we are carrying
+        // out many transactions in one query.
+        pool.query("BEGIN;")
+            .then((results) => {
+            return pool.query(
+                "UPDATE accounts SET balance=(balance-$1) WHERE account_number=$2;",
+                [amount, source_account_number]
+            );
+            })
+            .then((results) => {
+                return pool.query(
+                    'Update accounts set balance=(balance+$1) where account_number=$2;',
+                    [amount, destination_account_number]
+                );
+            })
+            .then((results) => {
+                return pool.query("COMMIT;");
+            })
+            .then((results) => {
+                console.log('transaction completed');
+            })
+            .catch((err) => {
+                console.error('error while querying:', err);
+                return pool.query('rollback')
+            })
+            .catch((err) => {
+                console.error('error while rolling back transaction:', err);
+            })
 
         result = await storeInternalTransactions({
             source_account_number: source_account_number,
@@ -72,6 +88,7 @@ const depositToAccount = async (req, res) => {
 
     if(!(amount && account_number)) {
         res.status(400).send("All input is required.");
+        return;
     }
 
     let result;
@@ -110,6 +127,7 @@ const withdrawalFromAccount = async (req, res) => {
 
     if(!(amount && account_number)) {
         res.status(400).send("All input is required.");
+        return;
     }
 
     let result;
