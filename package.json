@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node index.js",
-    "dev": "cross-env NODE_ENV=development nodemon index.js",
-    "test": "chmod +x ./bin/test.sh && cross-env NODE_ENV=test bash ./bin/test.sh",
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
+    "test": "chmod +x ./bin/test.sh && NODE_ENV=test bash ./bin/test.sh",
     "test-local": "npm test -- tests/*.test.js",
-    "deploy:full": "bash ./build_step.sh && git add . && git commit -m backend-deployment"
+    "deploy:full": "bash ./build_step.sh && git add . && git commit -m backend-deployment && git push"
   },
   "keywords": [],
   "author": "",

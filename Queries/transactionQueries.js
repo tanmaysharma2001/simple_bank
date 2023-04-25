@@ -1,14 +1,16 @@
 require('dotenv').config();
+const config = require('../utils/config');
 
 const Pool = require('pg').Pool;
 
 const pool = new Pool({
-    user: process.env.PG_USER,
-    host: process.env.PG_HOST,
-    database: process.env.PG_DATABASE,
-    password: process.env.PG_PASSWORD,
-    port: process.env.PG_PORT,
+    user: config.PG_USER,
+    host: config.PG_HOST,
+    database: config.PG_DATABASE,
+    password: config.PG_PASSWORD,
+    port: config.PG_PORT,
 });
+
 
 
 const sendAmountToAnotherUserInternally = async (req, res) => {
@@ -36,6 +38,11 @@ const sendAmountToAnotherUserInternally = async (req, res) => {
         // we need begin and rollback as we are carrying
         // out many transactions in one query.
         pool.query("BEGIN;")
+            .then((results) => {
+                return pool.query(
+                    "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;"
+                );
+            })
             .then((results) => {
             return pool.query(
                 "UPDATE accounts SET balance=(balance-$1) WHERE account_number=$2;",
@@ -95,12 +102,33 @@ const depositToAccount = async (req, res) => {
 
 
     const transactionPromise = new Promise(async (resolve, reject) => {
-        pool.query('Update accounts set balance=(balance+$1) where account_number=$2;', [amount, account_number], (error, results) => {
-            if (error) {
-                reject(error);
-                throw error;
-            }
-        });
+        pool.query("BEGIN;")
+            .then((results) => {
+                return pool.query(
+                    "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;"
+                );
+            })
+            .then((results) => {
+                return pool.query('Update accounts set balance=(balance+$1) where account_number=$2;', [amount, account_number], (error, results) => {
+                    if (error) {
+                        reject(error);
+                        throw error;
+                    }
+                });
+            })
+            .then((results) => {
+                return pool.query("COMMIT;");
+            })
+            .then((results) => {
+                console.log('transaction completed');
+            })
+            .catch((err) => {
+                console.error('error while querying:', err);
+                return pool.query('rollback')
+            })
+            .catch((err) => {
+                console.error('error while rolling back transaction:', err);
+            })
 
         result = await storeInternalTransactions({
             source_account_number: null,
@@ -133,12 +161,33 @@ const withdrawalFromAccount = async (req, res) => {
     let result;
 
     const transactionPromise = new Promise(async (resolve, reject) => {
-        pool.query('Update accounts set amount=(amount-$1) where account_number=$2;', [amount, account_number], (error, results) => {
-            if (error) {
-                reject(error);
-                throw error;
-            }
-        });
+        pool.query("BEGIN;")
+            .then((results) => {
+                return pool.query(
+                    "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;"
+                );
+            })
+            .then((results) => {
+                return pool.query('Update accounts set amount=(amount-$1) where account_number=$2;', [amount, account_number], (error, results) => {
+                    if (error) {
+                        reject(error);
+                        throw error;
+                    }
+                });
+            })
+            .then((results) => {
+                return pool.query("COMMIT;");
+            })
+            .then((results) => {
+                console.log('transaction completed');
+            })
+            .catch((err) => {
+                console.error('error while querying:', err);
+                return pool.query('rollback')
+            })
+            .catch((err) => {
+                console.error('error while rolling back transaction:', err);
+            })
 
         result = await storeInternalTransactions({
             source_account_number: null,
@@ -165,24 +214,47 @@ const storeInternalTransactions = async (params) => {
         transaction_amount
     } = params;
 
+
+
     let transactionID;
 
     // retrieving the transaction id
     const transactionIDPromise = new Promise((resolve, reject) => {
-        pool.query('select max(id) from internal_transactions;', (error, results) => {
-            if (error) {
-                reject(error);
-                throw error;
-            }
+        pool.query("BEGIN;")
+            .then((results) => {
+                return pool.query(
+                    "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;"
+                );
+            })
+            .then((results) => {
+                return pool.query('select max(id) from internal_transactions;', (error, results) => {
+                    if (error) {
+                        reject(error);
+                        throw error;
+                    }
 
-            if (results.rows.length === 0) {
-                transactionID = 1;
-            } else {
-                transactionID = results.rows[0].max + 1;
-            }
+                    if (results.rows.length === 0) {
+                        transactionID = 1;
+                    } else {
+                        transactionID = results.rows[0].max + 1;
+                    }
 
-            resolve(transactionID);
-        });
+                    resolve(transactionID);
+                })
+            })
+            .then((results) => {
+                return pool.query("COMMIT;");
+            })
+            .then((results) => {
+                console.log('transaction completed');
+            })
+            .catch((err) => {
+                console.error('error while querying:', err);
+                return pool.query('rollback')
+            })
+            .catch((err) => {
+                console.error('error while rolling back transaction:', err);
+            })
     });
 
     await transactionIDPromise;
