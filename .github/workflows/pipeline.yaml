@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: API testing
-        run: npm run test
+        run: npm run test-local
         env:
           PORT: ${{ secrets.PG_USER }}
           PG_HOST: ${{ secrets.PG_HOST }}
