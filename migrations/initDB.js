@@ -59,13 +59,13 @@ const createTableExternalTransactionsPromise = new Promise(async(resolve, reject
 });
 
 const createAllTables = async () => {
-    await createTableUsersPromise();
+    await createTableUsersPromise;
 
-    await createTableAccountsPromise();
+    await createTableAccountsPromise;
 
-    await createTableInternalTransactionsPromise();
+    await createTableInternalTransactionsPromise;
 
-    await createTableExternalTransactionsPromise();
+    await createTableExternalTransactionsPromise;
 };
 
 createAllTables();
