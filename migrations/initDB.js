@@ -4,11 +4,11 @@ const config = require('../utils/config');
 const Pool = require('pg').Pool;
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'simple_bank',
-    password: 'pragya56',
-    port: '5432',
+    user: process.env.PG_USER,
+    host: process.env.PG_HOST,
+    database: process.env.PG_DATABASE,
+    password: process.env.PG_PASSWORD,
+    port: process.env.PG_PORT,
 });
 
 
@@ -18,7 +18,36 @@ const createTableUsers = () => {
             throw error;
         }
     });
-}
+};
+
+const createTableAccounts = () => {
+    pool.query('create table accounts(account_number varchar(50) primary key, account_type varchar(30) not null, balance numeric(10, 2) not null);', (error, results) => {
+        if (error) {
+            throw error;
+        }
+    });
+};
+
+const createTableInternalTransactions = () => {
+    pool.query('create table internal_transactions(id serial not null, source_account_number varchar(50), destination_account_number varchar(50) not null, transaction_type VARCHAR(20) NOT NULL, transaction_amount NUMERIC(10, 2) NOT NULL, transaction_date           TIMESTAMP NOT NULL DEFAULT NOW(), PRIMARY KEY (id), FOREIGN KEY (source_account_number) REFERENCES accounts (account_number) ON DELETE CASCADE, FOREIGN KEY (destination_account_number) REFERENCES accounts (account_number) ON DELETE CASCADE);', (error, results) => {
+        if (error) {
+            throw error;
+        }
+    });
+};
+
+const createTableExternalTransactions = () => {
+    pool.query('CREATE TABLE external_transactions(id SERIAL PRIMARY KEY, source_account_number VARCHAR(50) NOT NULL, destination_bank_name VARCHAR(100) NOT NULL, destination_account_number VARCHAR(50) NOT NULL, transaction_type VARCHAR(20) NOT NULL, transaction_amount NUMERIC(10, 2) NOT NULL, transaction_date TIMESTAMP NOT NULL DEFAULT NOW(), FOREIGN KEY (source_account_number) REFERENCES accounts (account_number) ON DELETE CASCADE);', (error, results) => {
+        if (error) {
+            throw error;
+        }
+    });
+};
 
 createTableUsers();
 
+createTableAccounts();
+
+createTableInternalTransactions();
+
+createTableExternalTransactions();

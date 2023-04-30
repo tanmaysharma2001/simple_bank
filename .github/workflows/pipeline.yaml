@@ -12,9 +12,9 @@ jobs:
       postgres:
         image: postgres:13-alpine
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: simple_bank
-          POSTGRES_PASSWORD: pragya56
+          POSTGRES_USER: ${{ secrets.PG_USER }}
+          POSTGRES_DB: ${{ secrets.PG_DATABASE }}
+          POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
         ports:
           - '5432:5432'
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 10s --health-retries 5
@@ -30,11 +30,11 @@ jobs:
       - name: API testing
         run: npm run test-local
         env:
-          PORT: 8080
-          PG_HOST: localhost
-          PG_PORT: 5432
-          PG_USER: postgres
-          PG_PASSWORD: pragya56
-          PG_DATABASE: simple_bank
-          TOKEN_KEY: Pragya@56
+          PORT: ${{ secrets.PORT }}
+          PG_HOST: ${{ secrets.PG_HOST }}
+          PG_PORT: ${{ secrets.PG_PORT }}
+          PG_USER: ${{ secrets.PG_USER }}
+          PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
+          PG_DATABASE: ${{ secrets.PG_DATABASE }}
+          TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
           NODE_ENV: test
