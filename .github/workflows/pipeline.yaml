@@ -29,7 +29,7 @@ jobs:
         run: npm install
       - name: Run migrations
         env:
-          DATABASE_URL: postgres://postgres:pragya56@localhost:2345/simple_bank
+          DATABASE_URL: postgres://postgres:pragya56@localhost:5432/simple_bank
         run: |
           psql -h localhost -U postgres -d simple_bank -f ./migrations/*.sql
       - name: API testing
