@@ -13,7 +13,7 @@ jobs:
         image: postgres:13-alpine
         env:
           POSTGRES_USER: ${{ secrets.PG_USER }}
-          POSTGRES_DB: ${{ secrets.PG_DB }}
+          POSTGRES_DB: ${{ secrets.PG_DATABASE }}
           POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
         ports:
           - '2345:5432'
