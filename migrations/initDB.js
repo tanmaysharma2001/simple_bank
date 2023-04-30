@@ -4,11 +4,11 @@ const config = require('../utils/config');
 const Pool = require('pg').Pool;
 
 const pool = new Pool({
-    user: config.PG_USER,
-    host: config.PG_HOST,
-    database: config.PG_DATABASE,
-    password: config.PG_PASSWORD,
-    port: config.PG_PORT,
+    user: 'postgres',
+    host: 'localhost',
+    database: 'simple_bank',
+    password: 'pragya56',
+    port: '5432',
 });
 
 
