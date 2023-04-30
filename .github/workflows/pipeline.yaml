@@ -8,6 +8,15 @@ on:
 jobs:
   simple_deployment_pipeline:
     runs-on: ubuntu-20.04
+    services:
+      postgres:
+        image: postgres:13-alpine
+        env:
+          POSTGRES_USER: ${{ secrets.PG_USER }}
+          POSTGRES_DB: ${{ secrets.PG_DB }}
+          POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
+        ports:
+          - 2345:5432
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -15,3 +24,13 @@ jobs:
           node-version: '16'
       - name: Install dependencies
         run: npm install
+      - name: API testing
+        run: npm run test
+        env:
+          PORT: ${{ secrets.PG_USER }}
+          PG_HOST: ${{ secrets.PG_HOST }}
+          PG_PORT: ${{ secrets.PG_PORT }}
+          PG_USER: ${{ secrets.PG_USER }}
+          PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
+          PG_DATABASE: ${{ secrets.PG_DATABASE }}
+          TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
