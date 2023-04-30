@@ -27,13 +27,6 @@ jobs:
           node-version: '16'
       - name: Install dependencies
         run: npm install
-      - name: Wait for database
-        run: sleep 10
-      - name: Run migrations
-        env:
-          DATABASE_URL: postgres://postgres:pragya56@localhost:5432/simple_bank
-        run: |
-          psql -h localhost -U postgres -d simple_bank -f ./migrations/*.sql
       - name: API testing
         run: npm run test-local
         env:
