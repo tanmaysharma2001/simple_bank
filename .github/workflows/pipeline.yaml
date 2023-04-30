@@ -13,7 +13,7 @@ jobs:
         image: postgres:13-alpine
         env:
           POSTGRES_USER: postgres
-          POSTGRES_DB: ${{ secrets.PG_DATABASE }}
+          POSTGRES_DB: simple_bank
           POSTGRES_PASSWORD: google12
         ports:
           - '5432:5432'
@@ -30,11 +30,11 @@ jobs:
       - name: API testing
         run: npm run test-local
         env:
-          PORT: ${{ secrets.PG_USER }}
-          PG_HOST: ${{ secrets.PG_HOST }}
-          PG_PORT: ${{ secrets.PG_PORT }}
+          PORT: 8080
+          PG_HOST: localhost
+          PG_PORT: 5432
           PG_USER: postgres
           PG_PASSWORD: google12
-          PG_DATABASE: ${{ secrets.PG_DATABASE }}
-          TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
+          PG_DATABASE: simple_bank
+          TOKEN_KEY: Pragya@56
           NODE_ENV: test
