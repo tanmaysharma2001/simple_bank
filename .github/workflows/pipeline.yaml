@@ -16,7 +16,7 @@ jobs:
           POSTGRES_DB: ${{ secrets.PG_DATABASE }}
           POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
         ports:
-          - '5432:5432'
+          - '2345:5432'
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 10s --health-retries 5
     steps:
       - uses: actions/checkout@v3
