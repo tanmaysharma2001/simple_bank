@@ -5,8 +5,8 @@ const transactionsQueries = require('./../Queries/transactionQueries');
 const middleware = require("../utils/middleware");
 
 
-transactionsRouter.post('/transferToAccount', middleware.verifyToken, transactionsQueries.sendAmountToAnotherUserInternally);
+transactionsRouter.post('/transferToAccount', transactionsQueries.sendAmountToAnotherUserInternally);
 
-transactionsRouter.post('/depositToAccount', middleware.verifyToken, transactionsQueries.depositToAccount);
+transactionsRouter.post('/depositToAccount', transactionsQueries.depositToAccount);
 
 module.exports = transactionsRouter;
