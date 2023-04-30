@@ -2,6 +2,7 @@ version: '3'
 services:
   postgres:
     image: postgres:13-alpine
+    build: postgres/
     container_name: postgres
     environment:
       POSTGRES_USER: postgres
