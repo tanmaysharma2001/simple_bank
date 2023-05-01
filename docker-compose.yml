@@ -9,7 +9,7 @@ services:
       POSTGRES_DB: simple_bank
       POSTGRES_HOST_AUTH_METHOD: trust
     ports:
-      - '5432:5432'
+      - '2345:5432'
     volumes:
       - ./migrations:/docker-entrypoint-initdb.d
   app:

@@ -1,6 +1,3 @@
 1. Refresh token
-2. test driven development (after every feature)
-3. github ci/cd
-4. USING SWAGGER DOCUMENTATION
-5. dockerize the application and deploy to ecs and eks
-6. deploy to aws
+2. dockerize the application and deploy to ecs and eks
+3. deploy to aws
