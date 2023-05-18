@@ -20,9 +20,15 @@ services:
       PORT: 8080
       PG_HOST: postgres
       PG_PORT: 5432
-      PG_USER: me
-      PG_PASSWORD: pragya56
+      PG_USER: postgres
+      PG_PASSWORD: google12
       PG_DATABASE: simple_bank
       TOKEN_KEY: Pragya@56
+    entrypoint: ["./wait-for.sh",
+        	"postgres:5432",
+        	"--",
+        	"node",
+        	"./migrations/initDB.js"]
+    command: ["npm", "start"]
     depends_on:
       - postgres
