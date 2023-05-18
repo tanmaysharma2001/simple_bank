@@ -28,7 +28,7 @@ QUIET=0
 # The protocol to make the request with, either "tcp" or "http"
 PROTOCOL="tcp"
 
-echoerr() {wait-for
+echoerr() {
   if [ "$QUIET" -ne 1 ]; then printf "%s\n" "$*" 1>&2; fi
 }
 
