@@ -1,6 +1,6 @@
 const express = require('express');
 const authRouter = express.Router();
-
+// just a change
 const authQueries = require('../Queries/authQueries.js');
 
 authRouter.get('/getUsers', authQueries.getUsers);
