@@ -22,7 +22,7 @@ services:
       PORT: 8080
       PG_HOST: postgres
       PG_PORT: 5432
-      PG_USER: me
+      PG_USER: postgres
       PG_PASSWORD: pragya56
       PG_DATABASE: simple_bank
       TOKEN_KEY: Pragya@56
