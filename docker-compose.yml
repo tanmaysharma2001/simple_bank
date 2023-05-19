@@ -13,7 +13,7 @@ services:
     volumes:
       - ./migrations:/docker-entrypoint-initdb.d
   app:
-    image: sharmatanmay617/simple_bank
+    image: .
     build: simple_bank/
     container_name: simple_bank
     ports:
