@@ -63,6 +63,8 @@ const createAllTables = async () => {
 
     await createTableAccountsPromise;
 
+    await new Promise(r => setTimeout(r, 2000));
+
     await createTableInternalTransactionsPromise;
 
     await createTableExternalTransactionsPromise;
