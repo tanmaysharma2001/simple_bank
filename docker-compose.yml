@@ -13,22 +13,18 @@ services:
     volumes:
       - ./migrations:/docker-entrypoint-initdb.d
   app:
-    build: .
+    image: sharmatanmay617/simple_bank
+    build: simple_bank/
+    container_name: simple_bank
     ports:
-      - '8080:8080'
+      - '3000:8080'
     environment:
       PORT: 8080
       PG_HOST: postgres
       PG_PORT: 5432
-      PG_USER: postgres
-      PG_PASSWORD: google12
+      PG_USER: me
+      PG_PASSWORD: pragya56
       PG_DATABASE: simple_bank
       TOKEN_KEY: Pragya@56
-    entrypoint: ["./wait-for.sh",
-        	"postgres:5432",
-        	"--",
-        	"node",
-        	"./migrations/initDB.js"]
-    command: ["npm", "start"]
     depends_on:
       - postgres
