@@ -1,4 +1,4 @@
-const config = require('../utils/config');
+import config from "./config";
 
 const Pool = require('pg').Pool;
 
@@ -10,4 +10,4 @@ const pool = new Pool({
     port: config.PG_PORT,
 });
 
-module.exports = pool;
+export default pool;

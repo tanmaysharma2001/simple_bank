@@ -2,10 +2,11 @@
   "name": "simple-bank",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "start": "NODE_ENV=production node index.js",
-    "dev": "NODE_ENV=development nodemon index.js",
+    "build": "npx tsc",
+    "start": "npm run build && NODE_ENV=production node dist/index.js",
+    "dev": "NODE_ENV=development nodemon index.ts",
     "test": "chmod +x ./bin/test.sh && NODE_ENV=test bash ./bin/test.sh",
     "test-local": "npm test -- tests/*.test.js",
     "deploy:full": "bash ./build_step.sh && git add . && git commit -m backend-deployment && git push"
@@ -14,18 +15,21 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/morgan": "^1.9.7",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "expect": "^29.5.0",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
+    "morgan": "^1.10.0",
     "pg": "^8.9.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.2"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.15",
     "@types/express": "^4.17.17",
     "@types/jsonwebtoken": "^9.0.1",
     "@types/lodash": "^4.14.191",

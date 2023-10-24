@@ -13,8 +13,8 @@ services:
     volumes:
       - ./migrations:/docker-entrypoint-initdb.d
   app:
-    image: .
-    build: simple_bank/
+    build:
+      context: .
     container_name: simple_bank
     ports:
       - '3000:8080'
